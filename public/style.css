@@ -15,7 +15,8 @@
 
   /* Warna untuk grafik (dibaca oleh charts.js). Satu hue: seri harga utama. */
   --chart-1: #1d5fbf;
-  --chart-2: #8a8a8a;
+  --chart-2: #141414;  /* seri ke-2 (gula): tinta */
+  --chart-3: #8a8a8a;  /* seri ke-3 (minyak): abu */
   --chart-muted: #8a8a8a;
   --grid: var(--rule);
   --axis-ink: var(--muted);

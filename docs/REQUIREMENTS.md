@@ -6,7 +6,7 @@
 |---|---|---|---|
 | REQ-001 | Konsumen melihat tren harga beras medium per provinsi dan periode | done | — |
 | REQ-002 | Pengguna melihat perubahan harga antara dua bulan dengan pasar yang sama | done | REQ-001 |
-| REQ-003 | Petugas membandingkan beras, gula, dan minyak di satu provinsi | in-progress | REQ-001 |
+| REQ-003 | Petugas membandingkan beras, gula, dan minyak di satu provinsi | done | REQ-001 |
 | REQ-004 | Petugas mengelola daftar pantauan (tambah, lihat, ubah, hapus) | in-progress | REQ-001 |
 | REQ-005 | Aplikasi berjalan publik di Vercel dengan data pantauan yang bertahan | ready | REQ-002, REQ-003, REQ-004 |
 
@@ -55,17 +55,17 @@
 
 ## REQ-003 — Perbandingan beras, gula, dan minyak
 
-**Status:** in-progress
+**Status:** done
 **Tujuan:** Petugas membandingkan pergerakan tiga komoditas di satu provinsi pada skala yang sama, dengan mutu, satuan, dan periode yang jelas.
 **Bergantung pada:** REQ-001
 **Keputusan terkait:** D-002, G-002
 
 ### Acceptance criteria
-- [ ] **AC-1 (alur utama):** Ketika petugas memilih provinsi dan periode, maka halaman menampilkan tiga seri (Rice medium quality, Sugar local, Oil vegetable), masing-masing dengan label mutu dan satuan IDR/KG.
-- [ ] **AC-2 (skala sama):** Harga ketiga komoditas ditampilkan sebagai indeks (bulan pertama periode = 100) agar bisa dibandingkan, dengan harga asli ada di tabel di bawahnya.
-- [ ] **AC-3 (volatilitas):** Tabel menampilkan volatilitas tiap komoditas, yaitu simpangan baku perubahan bulanan (%) dalam periode, beserta rumusnya.
-- [ ] **AC-4 (data kurang):** Bila sebuah komoditas punya kurang dari 3 bulan data di pilihan itu, volatilitasnya tampil "tidak dapat dihitung" dan komoditas lain tetap tampil.
-- [ ] **AC-5 (provinsi tidak valid):** Provinsi yang tidak dikenal menghasilkan 400 dengan pesan JSON, dan halaman menampilkan pesannya.
+- [x] **AC-1 (alur utama):** Ketika petugas memilih provinsi dan periode, maka halaman menampilkan tiga seri (Rice medium quality, Sugar local, Oil vegetable), masing-masing dengan label mutu dan satuan IDR/KG.
+- [x] **AC-2 (skala sama):** Harga ketiga komoditas ditampilkan sebagai indeks (bulan pertama periode = 100) agar bisa dibandingkan, dengan harga asli ada di tabel di bawahnya.
+- [x] **AC-3 (volatilitas):** Tabel menampilkan volatilitas tiap komoditas, yaitu simpangan baku perubahan bulanan (%) dalam periode, beserta rumusnya.
+- [x] **AC-4 (data kurang):** Bila sebuah komoditas punya kurang dari 3 bulan data di pilihan itu, volatilitasnya tampil "tidak dapat dihitung" dan komoditas lain tetap tampil.
+- [x] **AC-5 (provinsi tidak valid):** Provinsi yang tidak dikenal menghasilkan 400 dengan pesan JSON, dan halaman menampilkan pesannya.
 
 ### Di luar REQ ini
 - Komoditas selain tiga yang disebut brief, dan menyimpan perbandingan ke pantauan (itu REQ-004).

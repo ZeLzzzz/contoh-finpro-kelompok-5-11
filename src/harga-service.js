@@ -1,6 +1,7 @@
 // Menghitung rata-rata harga bulanan dari data per pasar (REQ-001).
 // Dipisah dari Express supaya mudah diuji tanpa menjalankan server.
 import { COMMODITIES } from './wfp-data.js';
+import { monthlyChanges, sampleStandardDeviation, toIndex } from './statistics.js';
 
 // Kesalahan yang disebabkan input pengguna; server mengubahnya menjadi respons 400.
 export class ValidationError extends Error {
@@ -14,6 +15,10 @@ const MONTH_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/;
 
 export const METHOD_NOTE =
   'Rata-rata tak berbobot dari pasar yang punya data pada bulan itu (Retail, IDR/KG, priceflag aggregate; baris National Average tidak dipakai). Ini bukan harga representatif nasional.';
+export const VOLATILITY_FORMULA =
+  'Volatilitas = simpangan baku sampel (dibagi n-1) dari perubahan bulanan (%), dengan perubahan bulanan = (harga bulan ini / harga bulan sebelumnya - 1) x 100, hanya untuk dua bulan berurutan yang sama-sama punya data.';
+const MIN_MONTHS_FOR_VOLATILITY = 3;
+
 export const ATTRIBUTION = 'WFP/HDX, Indonesia - Food Prices (CC BY-IGO)';
 
 // Rata-rata tak berbobot dari daftar harga (dipakai perubahan dua bulan, REQ-002).
@@ -186,5 +191,47 @@ export function createHargaService(data) {
     };
   }
 
-  return { getOptions, getPrices, getChange };
+
+  // Membandingkan tiga komoditas di satu provinsi (REQ-003).
+  // Memakai getPrices per komoditas, jadi validasi provinsi dan periode sama.
+  function getComparison(query) {
+    const commodities = Object.entries(COMMODITIES).map(([kode, item]) => {
+      const prices = getPrices({ komoditas: kode, provinsi: query.provinsi, periode: query.periode });
+      const firstPrice = prices.titik[0]?.harga;
+      const points = prices.titik.map((point) => ({
+        bulan: point.bulan,
+        harga: point.harga,
+        indeks: toIndex(point.harga, firstPrice),
+        pasar: point.pasar,
+      }));
+
+      let volatility = null;
+      let reason = null;
+      if (points.length === 0) {
+        reason = 'Tidak ada data pada pilihan ini.';
+      } else if (points.length < MIN_MONTHS_FOR_VOLATILITY) {
+        reason = `Data hanya ${points.length} bulan; butuh minimal ${MIN_MONTHS_FOR_VOLATILITY} bulan.`;
+      } else {
+        const deviation = sampleStandardDeviation(monthlyChanges(points));
+        if (deviation === null) reason = 'Bulan-bulan datanya tidak berurutan, perubahan bulanan tidak cukup.';
+        else volatility = Math.round(deviation * 100) / 100;
+      }
+
+      return { kode, nama: item.nama, mutu: item.csv, satuan: item.satuan, titik: points, volatilitas: volatility, alasan: reason };
+    });
+
+    // Provinsi dan periode sudah divalidasi oleh getPrices di atas.
+    const province = String(query.provinsi).toUpperCase();
+    return {
+      provinsi: province,
+      periode: parsePeriod(query.periode),
+      dataTerakhir: lastMonth,
+      metode: METHOD_NOTE,
+      atribusi: ATTRIBUTION,
+      rumusVolatilitas: VOLATILITY_FORMULA,
+      komoditas: commodities,
+    };
+  }
+
+  return { getOptions, getPrices, getChange, getComparison };
 }

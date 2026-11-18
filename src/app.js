@@ -24,6 +24,11 @@ export function createApp({ hargaService }) {
     res.json(hargaService.getChange(req.query));
   });
 
+  // GET /api/bandingkan?provinsi=JAWA TIMUR&periode=2020-01:2024-05
+  app.get('/api/bandingkan', (req, res) => {
+    res.json(hargaService.getComparison(req.query));
+  });
+
   // Endpoint /api yang tidak ada dijawab JSON, bukan halaman HTML.
   app.use('/api', (req, res) => {
     res.status(404).json({ pesan: 'Endpoint tidak ditemukan.' });
