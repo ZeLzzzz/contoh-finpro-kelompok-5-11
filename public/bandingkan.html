@@ -26,8 +26,13 @@
 </head>
 <body class="min-h-screen text-[14px]">
   <!-- Bar atas untuk layar kecil -->
-  <header class="md:hidden flex items-center h-12 px-4 bg-surface border-b border-line">
+  <header class="md:hidden flex flex-wrap items-center justify-between gap-x-4 min-h-12 px-4 py-2 bg-surface border-b border-line">
     <span class="font-medium">Harga Pangan Daerah</span>
+    <nav class="flex gap-3 text-[14px]" aria-label="Menu utama">
+      <a href="/" class="text-muted">Harga</a>
+      <a href="/bandingkan.html" aria-current="page" class="font-medium">Bandingkan</a>
+      <a href="/pantauan.html" class="text-muted">Pantauan</a>
+    </nav>
   </header>
 
   <!-- Sidebar untuk layar lebar -->
@@ -37,6 +42,7 @@
     <nav class="mt-8" aria-label="Menu utama">
       <a href="/" class="block rounded-md px-3 py-1.5">Harga</a>
       <a href="/bandingkan.html" aria-current="page" class="block rounded-md bg-[#e9e9e9] px-3 py-1.5">Bandingkan</a>
+      <a href="/pantauan.html" class="block rounded-md px-3 py-1.5">Pantauan</a>
     </nav>
   </aside>
 

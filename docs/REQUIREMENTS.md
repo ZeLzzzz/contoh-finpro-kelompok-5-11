@@ -7,7 +7,7 @@
 | REQ-001 | Konsumen melihat tren harga beras medium per provinsi dan periode | done | — |
 | REQ-002 | Pengguna melihat perubahan harga antara dua bulan dengan pasar yang sama | done | REQ-001 |
 | REQ-003 | Petugas membandingkan beras, gula, dan minyak di satu provinsi | done | REQ-001 |
-| REQ-004 | Petugas mengelola daftar pantauan (tambah, lihat, ubah, hapus) | in-progress | REQ-001 |
+| REQ-004 | Petugas mengelola daftar pantauan (tambah, lihat, ubah, hapus) | done | REQ-001 |
 | REQ-005 | Aplikasi berjalan publik di Vercel dengan data pantauan yang bertahan | ready | REQ-002, REQ-003, REQ-004 |
 
 ---
@@ -74,19 +74,19 @@
 
 ## REQ-004 — Daftar pantauan (CRUD)
 
-**Status:** in-progress
+**Status:** done
 **Tujuan:** Petugas mencatat komoditas dan provinsi yang dipantau beserta tindak lanjutnya, lalu mengubah atau menghapusnya, dan catatan itu tetap ada setelah refresh.
 **Bergantung pada:** REQ-001
 **Keputusan terkait:** D-002, D-005, G-006
 
 ### Acceptance criteria
-- [ ] **AC-1 (tambah dan lihat):** Ketika petugas mengisi form (komoditas, provinsi, catatan tindak lanjut) dan menyimpan, maka `POST /api/pantauan` membalas 201 dengan `id`, dan item muncul di daftar.
-- [ ] **AC-2 (ubah):** `PUT /api/pantauan/:id` mengubah catatan atau status ("dipantau", "ditindaklanjuti", "selesai"); daftar menampilkan nilai baru.
-- [ ] **AC-3 (hapus):** `DELETE /api/pantauan/:id` membalas 204 setelah konfirmasi di halaman, dan item hilang dari daftar.
-- [ ] **AC-4 (validasi):** Komoditas atau provinsi di luar daftar, atau catatan lebih dari 280 karakter, ditolak dengan 400 dan pesan per kolom; isian pengguna tetap di form.
-- [ ] **AC-5 (id tidak ada):** Mengubah atau menghapus `id` yang tidak ada menghasilkan 404 dan halaman menampilkan "Item tidak ditemukan" lalu memuat ulang daftar.
-- [ ] **AC-6 (persisten dan kosong):** Setelah refresh, item masih ada (lewat adapter penyimpanan); daftar kosong menampilkan ajakan menambah item pertama.
-- [ ] **AC-7 (duplikat):** Item dengan komoditas dan provinsi yang sama dengan item aktif lain ditolak dengan 409.
+- [x] **AC-1 (tambah dan lihat):** Ketika petugas mengisi form (komoditas, provinsi, catatan tindak lanjut) dan menyimpan, maka `POST /api/pantauan` membalas 201 dengan `id`, dan item muncul di daftar.
+- [x] **AC-2 (ubah):** `PUT /api/pantauan/:id` mengubah catatan atau status ("dipantau", "ditindaklanjuti", "selesai"); daftar menampilkan nilai baru.
+- [x] **AC-3 (hapus):** `DELETE /api/pantauan/:id` membalas 204 setelah konfirmasi di halaman, dan item hilang dari daftar.
+- [x] **AC-4 (validasi):** Komoditas atau provinsi di luar daftar, atau catatan lebih dari 280 karakter, ditolak dengan 400 dan pesan per kolom; isian pengguna tetap di form.
+- [x] **AC-5 (id tidak ada):** Mengubah atau menghapus `id` yang tidak ada menghasilkan 404 dan halaman menampilkan "Item tidak ditemukan" lalu memuat ulang daftar.
+- [x] **AC-6 (persisten dan kosong):** Setelah refresh, item masih ada (lewat adapter penyimpanan); daftar kosong menampilkan ajakan menambah item pertama.
+- [x] **AC-7 (duplikat):** Item dengan komoditas dan provinsi yang sama dengan item aktif lain ditolak dengan 409.
 
 ### Di luar REQ ini
 - Login dan pembagian data per pengguna (data pantauan dipakai bersama), serta impor dan ekspor.

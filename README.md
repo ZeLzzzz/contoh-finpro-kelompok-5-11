@@ -2,7 +2,7 @@
 
 Dasbor harga beras, gula, dan minyak per provinsi dari data WFP/HDX. Ini **proyek contoh untuk mentoring Web Development**: dibuat hanya dengan teknologi silabus (HTML, Tailwind CDN, JavaScript/DOM, fetch, Express, GitHub, Vercel) dan ditulis agar mudah dibaca pemula.
 
-Spesifikasi lengkap ada di [`docs/`](docs/). Status saat ini: REQ-001 (tren harga) dan REQ-002 (perubahan dua bulan), dan REQ-003 (perbandingan komoditas) selesai; REQ-004 sampai REQ-005 belum.
+Spesifikasi lengkap ada di [`docs/`](docs/). Status saat ini: REQ-001 (tren harga) dan REQ-002 (perubahan dua bulan), REQ-003 (perbandingan komoditas), dan REQ-004 (daftar pantauan) selesai; REQ-005 (deploy Vercel) belum.
 
 ## Menjalankan
 
@@ -20,16 +20,19 @@ npm test         # menjalankan semua tes
 - Pilihan filter ikut tersimpan di alamat halaman (`?provinsi=BALI&periode=2023-01:2024-05`).
 - Kartu "Perubahan harga" di kanan: pilih bulan awal dan akhir, lihat harga awal, harga akhir, selisih, dan persen perubahan dari pasar yang sama di kedua bulan.
 - Halaman **Bandingkan** (`/bandingkan.html`): indeks harga beras, gula, dan minyak (bulan pertama = 100), harga asli, dan volatilitas per komoditas.
+- Halaman **Pantauan** (`/pantauan.html`): tambah, ubah (catatan dan status), dan hapus item pantauan; data tersimpan di `data/pantauan.json` saat dijalankan lokal.
 - Status memuat, error (dengan tombol "Coba lagi"), dan data kosong.
 
 ## Struktur folder
 
 | Lokasi | Isi |
 |---|---|
-| `public/` | Halaman: `index.html` (HTML + Tailwind), `app.js` (DOM dan fetch), `style.css` (warna dan huruf), `charts.js` (penggambar grafik SVG, dari taste-skill) |
+| `public/` | Halaman: `index.html` + `app.js` (Harga), `bandingkan.html` + `bandingkan.js`, `pantauan.html` + `pantauan.js`, `style.css` (warna dan huruf), `charts.js` (penggambar grafik SVG, dari taste-skill) |
 | `src/server.js` | Menjalankan server |
 | `src/app.js` | Aplikasi Express: route dan penanganan error |
 | `src/harga-service.js` | Menghitung rata-rata harga bulanan, perubahan dua bulan, dan perbandingan komoditas; memeriksa input |
+| `src/pantauan-service.js` | Aturan daftar pantauan: validasi, duplikat, status |
+| `src/pantauan-store.js` | Adapter penyimpanan pantauan (file JSON) |
 | `src/statistics.js` | Hitungan murni: indeks, perubahan bulanan, simpangan baku |
 | `src/wfp-data.js` | Membaca CSV WFP dan menyaring baris yang boleh dipakai |
 | `scripts/build-data.mjs` | Membuat `data/harga.json` dari CSV WFP |
@@ -54,6 +57,15 @@ Perubahan harga antara dua bulan, dihitung hanya dari pasar yang punya data di k
 
 ### `GET /api/bandingkan?provinsi=JAWA TIMUR&periode=2020-01:2024-05`
 Tiga komoditas sekaligus. Tiap komoditas membawa `titik` (`bulan`, `harga`, `indeks`, `pasar`), `mutu`, `satuan`, dan `volatilitas` (simpangan baku sampel dari perubahan bulanan dalam persen; rumusnya ada di `rumusVolatilitas`). Komoditas dengan kurang dari 3 bulan data mendapat `volatilitas: null` dan `alasan`. Provinsi tidak valid dibalas `400`.
+
+### `/api/pantauan` (CRUD daftar pantauan)
+- `GET /api/pantauan`: daftar, terbaru dulu.
+- `POST /api/pantauan` dengan `{ komoditas, provinsi, catatan }`: `201` beserta `id`. Status awal selalu `dipantau`.
+- `PUT /api/pantauan/:id` dengan `{ catatan, status }` (`dipantau`, `ditindaklanjuti`, `selesai`): `200`. Komoditas dan provinsi tidak bisa diubah.
+- `DELETE /api/pantauan/:id`: `204`.
+- Kesalahan: `400` dengan `kolom` berisi pesan per kolom (komoditas atau provinsi tidak dikenal, catatan lebih dari 280 karakter, JSON rusak), `404` bila `id` tidak ada, `409` bila komoditas dan provinsi yang sama sudah dipantau dan belum `selesai`.
+
+Semua akses data lewat adapter penyimpanan (`src/pantauan-store.js`: `list`, `get`, `create`, `update`, `remove`). Lokal memakai file JSON; adapter Upstash Redis untuk Vercel menyusul di REQ-005.
 
 ## Data
 

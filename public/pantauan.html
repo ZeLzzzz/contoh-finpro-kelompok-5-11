@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daftar pantauan - Harga Pangan Daerah</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Nama warna Tailwind mengikuti variabel di style.css.
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ground: 'var(--ground)', surface: 'var(--surface)', line: 'var(--border)', rule: 'var(--rule)',
+            control: 'var(--control)', ink: 'var(--text)', muted: 'var(--muted)', accent: 'var(--accent)',
+            danger: 'var(--negative)',
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="min-h-screen text-[14px]">
+  <!-- Bar atas untuk layar kecil -->
+  <header class="md:hidden flex flex-wrap items-center justify-between gap-x-4 min-h-12 px-4 py-2 bg-surface border-b border-line">
+    <span class="font-medium">Harga Pangan Daerah</span>
+    <nav class="flex gap-3 text-[14px]" aria-label="Menu utama">
+      <a href="/" class="text-muted">Harga</a>
+      <a href="/bandingkan.html" class="text-muted">Bandingkan</a>
+      <a href="/pantauan.html" aria-current="page" class="font-medium">Pantauan</a>
+    </nav>
+  </header>
+
+  <!-- Sidebar untuk layar lebar -->
+  <aside class="hidden md:flex fixed inset-y-0 left-0 w-60 flex-col px-3 py-8">
+    <p class="px-3 font-medium text-[16px]">Harga Pangan Daerah</p>
+    <p class="px-3 text-[12px] text-muted">Data WFP/HDX, 2020–2024</p>
+    <nav class="mt-8" aria-label="Menu utama">
+      <a href="/" class="block rounded-md px-3 py-1.5">Harga</a>
+      <a href="/bandingkan.html" class="block rounded-md px-3 py-1.5">Bandingkan</a>
+      <a href="/pantauan.html" aria-current="page" class="block rounded-md bg-[#e9e9e9] px-3 py-1.5">Pantauan</a>
+    </nav>
+  </aside>
+
+  <main class="md:ml-60 px-4 md:px-6 py-6 md:py-8 max-w-[1280px]">
+    <h1 class="text-[24px] font-bold">Daftar pantauan</h1>
+    <p id="finding" class="mt-1 text-muted min-h-[1.5em]" aria-live="polite"></p>
+
+    <div class="mt-5 grid gap-3 lg:grid-cols-[1fr_384px] items-start">
+      <!-- Daftar -->
+      <section class="rounded-lg border border-line bg-surface min-w-0" aria-labelledby="list-heading">
+        <h2 id="list-heading" class="sr-only">Item pantauan</h2>
+        <p id="notice" class="px-4 pt-4 text-[14px]" role="status" hidden></p>
+        <p id="loading" class="p-4 text-muted">Memuat daftar…</p>
+        <div id="error" class="p-4" role="alert" hidden>
+          <p id="error-message" class="text-danger"></p>
+          <button id="retry" type="button" class="mt-3 h-9 rounded-md bg-accent px-4 text-white">Coba lagi</button>
+        </div>
+        <p id="empty" class="p-4" hidden>Belum ada item pantauan. Tambahkan yang pertama di form.</p>
+        <ul id="items"></ul>
+      </section>
+
+      <!-- Form tambah -->
+      <aside>
+        <form id="add-form" class="rounded-lg border border-line bg-surface p-4 flex flex-col gap-3" novalidate aria-labelledby="form-heading">
+          <h2 id="form-heading" class="text-[16px] font-medium">Tambah item pantauan</h2>
+          <div>
+            <label for="komoditas" class="block text-[12px] text-muted mb-1">Komoditas</label>
+            <select id="komoditas" class="h-9 w-full rounded-md border border-control bg-surface px-2 text-[14px] text-ink" aria-describedby="error-komoditas"></select>
+            <p id="error-komoditas" class="mt-1 text-[12px] text-danger" hidden></p>
+          </div>
+          <div>
+            <label for="provinsi" class="block text-[12px] text-muted mb-1">Provinsi</label>
+            <select id="provinsi" class="h-9 w-full rounded-md border border-control bg-surface px-2 text-[14px] text-ink" aria-describedby="error-provinsi"></select>
+            <p id="error-provinsi" class="mt-1 text-[12px] text-danger" hidden></p>
+          </div>
+          <div>
+            <label for="catatan" class="block text-[12px] text-muted mb-1">Catatan tindak lanjut</label>
+            <textarea id="catatan" rows="4" class="w-full rounded-md border border-control bg-surface px-2 py-2 text-[14px] text-ink" aria-describedby="error-catatan counter"></textarea>
+            <div class="mt-1 flex justify-between gap-2">
+              <p id="error-catatan" class="text-[12px] text-danger" hidden></p>
+              <p id="counter" class="figure ml-auto text-[12px] text-muted">0/280</p>
+            </div>
+          </div>
+          <p id="form-message" class="text-[12px] text-danger" role="alert" hidden></p>
+          <button id="save" type="submit" class="h-9 rounded-md bg-accent px-4 text-white">Simpan</button>
+        </form>
+      </aside>
+    </div>
+  </main>
+
+  <script type="module" src="pantauan.js"></script>
+</body>
+</html>
