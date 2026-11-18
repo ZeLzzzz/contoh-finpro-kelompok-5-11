@@ -5,9 +5,9 @@
 | ID | Hasil yang terlihat pengguna | Status | Bergantung pada |
 |---|---|---|---|
 | REQ-001 | Konsumen melihat tren harga beras medium per provinsi dan periode | done | — |
-| REQ-002 | Pengguna melihat perubahan harga antara dua bulan dengan pasar yang sama | ready | REQ-001 |
-| REQ-003 | Petugas membandingkan beras, gula, dan minyak di satu provinsi | ready | REQ-001 |
-| REQ-004 | Petugas mengelola daftar pantauan (tambah, lihat, ubah, hapus) | ready | REQ-001 |
+| REQ-002 | Pengguna melihat perubahan harga antara dua bulan dengan pasar yang sama | in-progress | REQ-001 |
+| REQ-003 | Petugas membandingkan beras, gula, dan minyak di satu provinsi | in-progress | REQ-001 |
+| REQ-004 | Petugas mengelola daftar pantauan (tambah, lihat, ubah, hapus) | in-progress | REQ-001 |
 | REQ-005 | Aplikasi berjalan publik di Vercel dengan data pantauan yang bertahan | ready | REQ-002, REQ-003, REQ-004 |
 
 ---
@@ -36,7 +36,7 @@
 
 ## REQ-002 — Perubahan harga antara dua bulan
 
-**Status:** ready
+**Status:** in-progress
 **Tujuan:** Pengguna memilih bulan awal dan bulan akhir, lalu melihat persen perubahan harga yang dihitung dari pasar yang sama di kedua bulan.
 **Bergantung pada:** REQ-001
 **Keputusan terkait:** D-002, G-002
@@ -55,7 +55,7 @@
 
 ## REQ-003 — Perbandingan beras, gula, dan minyak
 
-**Status:** ready
+**Status:** in-progress
 **Tujuan:** Petugas membandingkan pergerakan tiga komoditas di satu provinsi pada skala yang sama, dengan mutu, satuan, dan periode yang jelas.
 **Bergantung pada:** REQ-001
 **Keputusan terkait:** D-002, G-002
@@ -74,7 +74,7 @@
 
 ## REQ-004 — Daftar pantauan (CRUD)
 
-**Status:** ready
+**Status:** in-progress
 **Tujuan:** Petugas mencatat komoditas dan provinsi yang dipantau beserta tindak lanjutnya, lalu mengubah atau menghapusnya, dan catatan itu tetap ada setelah refresh.
 **Bergantung pada:** REQ-001
 **Keputusan terkait:** D-002, D-005, G-006
