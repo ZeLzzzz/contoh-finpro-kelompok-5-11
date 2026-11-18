@@ -18,6 +18,7 @@
 
 | ID | Pertanyaan | Opsi (rekomendasi pertama) | Pemilik | Menghambat? |
 |---|---|---|---|---|
+| D-011 | Pilihan agent yang belum disetujui: nama endpoint `/api/perubahan` dan `/api/bandingkan`; volatilitas butuh minimal 3 bulan data; Upstash dipanggil lewat REST dengan `fetch` (tanpa library) dan data disimpan sebagai hash Redis, satu field per item; `npm start` membaca `.env` bila ada. | Setuju (dipakai sementara), atau ganti nama atau cara | User, sebelum REQ-005 ditutup | REQ-005 |
 | D-010 | Siapa yang membuat database Upstash di Vercel dan menyimpan kredensialnya? | User membuatnya di dashboard Vercel saat deploy (dipakai sementara), atau agent memandu langkahnya | User, sebelum REQ-005 | REQ-005 |
 
 ## Perubahan scope

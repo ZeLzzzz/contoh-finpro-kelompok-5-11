@@ -30,4 +30,4 @@ Pola layar Harga mengikuti pola `overview` pada sheet; layar Pantauan disusun da
 - Sidebar menjadi bar atas 48 px di bawah 768 px; tidak ada scroll horizontal di 360 px.
 
 ## Token
-Token lengkap ada di `.taste-skill/direction.json` (bagian 2 sheet): `--ground`, `--surface`, `--text`, `--muted`, `--accent` (`#141414`), `--chart-3` (`#1d5fbf`, seri utama), `--positive`, `--negative`, radius kartu 8 px dan kontrol 6 px, jarak antar-kartu 12 px.
+Token lengkap ada di `.taste-skill/direction.json` (bagian 2 sheet): `--ground`, `--surface`, `--text`, `--muted`, `--accent` (`#141414`), `--chart-1` (`#1d5fbf`, seri utama; `--chart-2` tinta dan `--chart-3` abu untuk seri pembanding), `--positive`, `--negative`, radius kartu 8 px dan kontrol 6 px, jarak antar-kartu 12 px.

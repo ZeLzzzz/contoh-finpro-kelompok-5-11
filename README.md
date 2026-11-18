@@ -6,7 +6,7 @@ Spesifikasi lengkap ada di [`docs/`](docs/). Status saat ini: REQ-001 (tren harg
 
 ## Menjalankan
 
-Butuh Node.js 22 atau lebih baru.
+Butuh Node.js 22.9 atau lebih baru.
 
 ```sh
 npm install
@@ -32,7 +32,10 @@ npm test         # menjalankan semua tes
 | `src/app.js` | Aplikasi Express: route dan penanganan error |
 | `src/harga-service.js` | Menghitung rata-rata harga bulanan, perubahan dua bulan, dan perbandingan komoditas; memeriksa input |
 | `src/pantauan-service.js` | Aturan daftar pantauan: validasi, duplikat, status |
-| `src/pantauan-store.js` | Adapter penyimpanan pantauan (file JSON) |
+| `src/pantauan-store.js` | Adapter penyimpanan pantauan: file JSON (lokal) |
+| `src/pantauan-redis-store.js` | Adapter penyimpanan pantauan: Upstash Redis (Vercel) |
+| `src/choose-store.js` | Memilih adapter dari variabel lingkungan |
+| `api/index.js`, `vercel.json` | Pintu masuk dan pengaturan Vercel |
 | `src/statistics.js` | Hitungan murni: indeks, perubahan bulanan, simpangan baku |
 | `src/wfp-data.js` | Membaca CSV WFP dan menyaring baris yang boleh dipakai |
 | `scripts/build-data.mjs` | Membuat `data/harga.json` dari CSV WFP |
@@ -65,7 +68,37 @@ Tiga komoditas sekaligus. Tiap komoditas membawa `titik` (`bulan`, `harga`, `ind
 - `DELETE /api/pantauan/:id`: `204`.
 - Kesalahan: `400` dengan `kolom` berisi pesan per kolom (komoditas atau provinsi tidak dikenal, catatan lebih dari 280 karakter, JSON rusak), `404` bila `id` tidak ada, `409` bila komoditas dan provinsi yang sama sudah dipantau dan belum `selesai`.
 
-Semua akses data lewat adapter penyimpanan (`src/pantauan-store.js`: `list`, `get`, `create`, `update`, `remove`). Lokal memakai file JSON; adapter Upstash Redis untuk Vercel menyusul di REQ-005.
+Semua akses data lewat adapter penyimpanan dengan lima fungsi: `list`, `get`, `create`, `update`, `remove`. `src/choose-store.js` memilih adapternya dari variabel lingkungan:
+
+| Kondisi | Penyimpanan |
+|---|---|
+| `UPSTASH_REDIS_REST_URL` dan `UPSTASH_REDIS_REST_TOKEN` terisi (atau `KV_REST_API_URL` dan `KV_REST_API_TOKEN` dari integrasi Vercel) | Upstash Redis (`src/pantauan-redis-store.js`) |
+| Tidak terisi, berjalan di Vercel | Belum dikonfigurasi: `/api/pantauan` membalas `503`, halaman Harga dan Bandingkan tetap jalan |
+| Tidak terisi, berjalan lokal | File `data/pantauan.json` (`src/pantauan-store.js`) |
+
+## Deploy ke Vercel
+
+Repositori ini sudah siap dipakai Vercel: `api/index.js` menjalankan Express untuk semua `/api/*` (diatur `vercel.json`), dan folder `public/` disajikan sebagai berkas statis. Tanpa build step.
+
+1. Di [vercel.com/new](https://vercel.com/new), impor repositori GitHub ini. Biarkan pengaturan bawaan (Framework Preset: Other, tanpa Build Command).
+2. Buka tab **Storage** pada proyek, pilih **Upstash** (Redis) dari Marketplace, buat database gratis, lalu hubungkan ke proyek. Vercel mengisi variabel `KV_REST_API_URL` dan `KV_REST_API_TOKEN` otomatis.
+3. Deploy ulang (**Deployments → Redeploy**) supaya variabel terbaca.
+4. Buka tautan Vercel, tambah satu item di halaman Pantauan, lalu refresh. Item harus tetap ada.
+
+Sebelum langkah 2, halaman Harga dan Bandingkan sudah berfungsi dan Pantauan menampilkan pesan bahwa penyimpanan belum dikonfigurasi.
+
+Mencoba Upstash dari komputer sendiri: salin `.env.example` menjadi `.env`, isi dua variabel, lalu `npm start` (file `.env` dibaca otomatis dan tidak masuk git).
+
+## Hasil uji
+
+`npm test` menjalankan 65 tes (`node:test`): penyaringan data WFP, hitungan harga bulanan, perubahan dua bulan (10.000 ke 12.000 = +20,0%), indeks dan volatilitas, CRUD pantauan beserta kode status, kontrak adapter file dan Upstash (Upstash dipalsukan di memori), pemilihan penyimpanan, dan pintu masuk Vercel. Halaman diperiksa di browser pada lebar 1440, 768, 390, dan 360 px.
+
+## Batas aplikasi
+
+- Angka harga adalah rata-rata tak berbobot dari pasar yang punya data, hanya untuk Jan 2020–Mei 2024. Bukan harga toko, bukan harga hari ini, dan bukan harga representatif nasional. Jumlah pasar berubah antar bulan (di Jawa Timur, Jan 2024 punya 18 pasar sedangkan bulan lain 6), sehingga perubahan antar bulan memakai pasar yang sama di kedua bulan.
+- Data pantauan dipakai bersama semua orang yang membuka aplikasi. Tidak ada login.
+- Mengubah satu item di Upstash membaca lalu menulis, jadi dua orang yang mengubah item yang sama pada detik yang sama bisa saling menimpa. Cukup untuk contoh ini.
+- Aplikasi tidak membuktikan stabilisasi harga atau dampak pada masyarakat.
 
 ## Data
 

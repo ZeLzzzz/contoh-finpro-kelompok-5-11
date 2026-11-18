@@ -8,7 +8,7 @@
 | REQ-002 | Pengguna melihat perubahan harga antara dua bulan dengan pasar yang sama | done | REQ-001 |
 | REQ-003 | Petugas membandingkan beras, gula, dan minyak di satu provinsi | done | REQ-001 |
 | REQ-004 | Petugas mengelola daftar pantauan (tambah, lihat, ubah, hapus) | done | REQ-001 |
-| REQ-005 | Aplikasi berjalan publik di Vercel dengan data pantauan yang bertahan | ready | REQ-002, REQ-003, REQ-004 |
+| REQ-005 | Aplikasi berjalan publik di Vercel dengan data pantauan yang bertahan | in-progress | REQ-002, REQ-003, REQ-004 |
 
 ---
 
@@ -95,17 +95,17 @@
 
 ## REQ-005 — Online di Vercel dengan data yang bertahan
 
-**Status:** ready
+**Status:** in-progress
 **Tujuan:** Aplikasi bisa dibuka lewat tautan Vercel publik dan data pantauan tidak hilang setelah refresh atau deploy ulang, dengan README dan bukti uji untuk dikumpulkan.
 **Bergantung pada:** REQ-002, REQ-003, REQ-004
 **Keputusan terkait:** D-004, D-005, D-010, G-001, G-006
 
 ### Acceptance criteria
 - [ ] **AC-1 (alur utama):** Tautan Vercel membuka dasbor, semua endpoint `/api/harga` dan `/api/pantauan` berfungsi, dan CRUD pantauan tetap terbaca setelah refresh.
-- [ ] **AC-2 (adapter):** Lokal memakai file JSON, produksi memakai Upstash Redis; pilihan ditentukan oleh variabel lingkungan, dan kode aplikasi tidak berubah di antara keduanya.
-- [ ] **AC-3 (konfigurasi hilang):** Bila variabel Upstash tidak ada di produksi, API pantauan membalas 503 dengan pesan jelas dan halaman tetap menampilkan dasbor harga.
-- [ ] **AC-4 (repo bersih):** Repo GitHub publik tidak memuat `.env`, `node_modules`, atau token, dan memuat `.env.example`.
-- [ ] **AC-5 (dokumentasi):** README menjelaskan cara menjalankan, endpoint, sumber dan atribusi data, hasil uji, batas aplikasi, dan langkah deploy ke Vercel.
+- [x] **AC-2 (adapter):** Lokal memakai file JSON, produksi memakai Upstash Redis; pilihan ditentukan oleh variabel lingkungan, dan kode aplikasi tidak berubah di antara keduanya.
+- [x] **AC-3 (konfigurasi hilang):** Bila variabel Upstash tidak ada di produksi, API pantauan membalas 503 dengan pesan jelas dan halaman tetap menampilkan dasbor harga.
+- [x] **AC-4 (repo bersih):** Repo GitHub publik tidak memuat `.env`, `node_modules`, atau token, dan memuat `.env.example`.
+- [x] **AC-5 (dokumentasi):** README menjelaskan cara menjalankan, endpoint, sumber dan atribusi data, hasil uji, batas aplikasi, dan langkah deploy ke Vercel.
 
 ### Di luar REQ ini
 - Domain kustom, analitik, dan CI.
