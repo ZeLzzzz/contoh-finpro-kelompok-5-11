@@ -46,6 +46,7 @@ test('REQ-001 AC-1: provinsi tidak peka huruf besar-kecil', () => {
 test('REQ-001 AC-3: input tidak valid melempar ValidationError dengan pesan', () => {
   const bad = [
     [{ ...query, komoditas: 'durian' }, /Komoditas/],
+    [{ ...query, komoditas: 'constructor' }, /Komoditas/], // nama bawaan JavaScript bukan komoditas
     [{ ...query, provinsi: 'ATLANTIS' }, /Provinsi/],
     [{ komoditas: 'beras-medium' }, /provinsi wajib/],
     [{ ...query, periode: '2023' }, /YYYY-MM/],

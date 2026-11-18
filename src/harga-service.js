@@ -81,7 +81,7 @@ export function createHargaService(data) {
   function getPrices(query) {
     const commodityCode = query.komoditas ?? 'beras-medium';
     const commodity = COMMODITIES[commodityCode];
-    if (!commodity) {
+    if (!Object.hasOwn(COMMODITIES, commodityCode)) {
       throw new ValidationError(`Komoditas "${commodityCode}" tidak dikenal. Pilihan: ${Object.keys(COMMODITIES).join(', ')}.`);
     }
 
