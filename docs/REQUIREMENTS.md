@@ -5,7 +5,7 @@
 | ID | Hasil yang terlihat pengguna | Status | Bergantung pada |
 |---|---|---|---|
 | REQ-001 | Konsumen melihat tren harga beras medium per provinsi dan periode | done | — |
-| REQ-002 | Pengguna melihat perubahan harga antara dua bulan dengan pasar yang sama | in-progress | REQ-001 |
+| REQ-002 | Pengguna melihat perubahan harga antara dua bulan dengan pasar yang sama | done | REQ-001 |
 | REQ-003 | Petugas membandingkan beras, gula, dan minyak di satu provinsi | in-progress | REQ-001 |
 | REQ-004 | Petugas mengelola daftar pantauan (tambah, lihat, ubah, hapus) | in-progress | REQ-001 |
 | REQ-005 | Aplikasi berjalan publik di Vercel dengan data pantauan yang bertahan | ready | REQ-002, REQ-003, REQ-004 |
@@ -36,17 +36,17 @@
 
 ## REQ-002 — Perubahan harga antara dua bulan
 
-**Status:** in-progress
+**Status:** done
 **Tujuan:** Pengguna memilih bulan awal dan bulan akhir, lalu melihat persen perubahan harga yang dihitung dari pasar yang sama di kedua bulan.
 **Bergantung pada:** REQ-001
 **Keputusan terkait:** D-002, G-002
 
 ### Acceptance criteria
-- [ ] **AC-1 (alur utama):** Ketika pengguna memilih dua bulan, maka halaman menampilkan harga awal, harga akhir, selisih, persen perubahan bertanda (+/−), dan jumlah pasar yang dipakai.
-- [ ] **AC-2 (hitungan):** Harga 10.000 ke 12.000 menghasilkan +20,0% (diuji di tes unit dan lewat API).
-- [ ] **AC-3 (pasar sama):** Perubahan dihitung hanya dari pasar yang punya data di kedua bulan; bila tidak ada pasar yang sama, tampil "tidak dapat dihitung" beserta alasannya.
-- [ ] **AC-4 (acuan nol atau kosong):** Bila harga acuan nol atau tidak tersedia, hasilnya "tidak dapat dihitung", bukan angka tak hingga atau NaN.
-- [ ] **AC-5 (urutan bulan):** Bila bulan awal sesudah bulan akhir, server membalas 400 dan halaman menampilkan pesan yang jelas.
+- [x] **AC-1 (alur utama):** Ketika pengguna memilih dua bulan, maka halaman menampilkan harga awal, harga akhir, selisih, persen perubahan bertanda (+/−), dan jumlah pasar yang dipakai.
+- [x] **AC-2 (hitungan):** Harga 10.000 ke 12.000 menghasilkan +20,0% (diuji di tes unit dan lewat API).
+- [x] **AC-3 (pasar sama):** Perubahan dihitung hanya dari pasar yang punya data di kedua bulan; bila tidak ada pasar yang sama, tampil "tidak dapat dihitung" beserta alasannya.
+- [x] **AC-4 (acuan nol atau kosong):** Bila harga acuan nol atau tidak tersedia, hasilnya "tidak dapat dihitung", bukan angka tak hingga atau NaN.
+- [x] **AC-5 (urutan bulan):** Bila bulan awal sesudah bulan akhir, server membalas 400 dan halaman menampilkan pesan yang jelas.
 
 ### Di luar REQ ini
 - Persen perubahan lebih dari dua titik waktu, dan prakiraan.

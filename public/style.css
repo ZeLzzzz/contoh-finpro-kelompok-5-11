@@ -11,6 +11,7 @@
   --muted: #6b6b6b;
   --accent: #141414;
   --negative: #c4242a;
+  --positive: #2e7d32;
 
   /* Warna untuk grafik (dibaca oleh charts.js). Satu hue: seri harga utama. */
   --chart-1: #1d5fbf;
@@ -36,4 +37,13 @@ body {
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* Persen perubahan: naik hijau, turun merah. Tanda + dan − tetap ditulis, jadi tidak hanya warna. */
+.change-up {
+  color: var(--positive);
+}
+
+.change-down {
+  color: var(--negative);
 }

@@ -19,6 +19,11 @@ export function createApp({ hargaService }) {
     res.json(hargaService.getPrices(req.query));
   });
 
+  // GET /api/perubahan?komoditas=beras-medium&provinsi=JAWA TIMUR&dari=2023-05&sampai=2024-05
+  app.get('/api/perubahan', (req, res) => {
+    res.json(hargaService.getChange(req.query));
+  });
+
   // Endpoint /api yang tidak ada dijawab JSON, bukan halaman HTML.
   app.use('/api', (req, res) => {
     res.status(404).json({ pesan: 'Endpoint tidak ditemukan.' });

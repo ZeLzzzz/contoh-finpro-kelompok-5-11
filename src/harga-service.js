@@ -16,6 +16,28 @@ export const METHOD_NOTE =
   'Rata-rata tak berbobot dari pasar yang punya data pada bulan itu (Retail, IDR/KG, priceflag aggregate; baris National Average tidak dipakai). Ini bukan harga representatif nasional.';
 export const ATTRIBUTION = 'WFP/HDX, Indonesia - Food Prices (CC BY-IGO)';
 
+// Rata-rata tak berbobot dari daftar harga (dipakai perubahan dua bulan, REQ-002).
+function averagePrice(prices) {
+  return prices.reduce((sum, price) => sum + price, 0) / prices.length;
+}
+
+// Persen perubahan dari acuan `from` ke `to`, dibulatkan satu desimal (REQ-002).
+// Acuan nol atau bukan angka tidak bisa dibagi, jadi hasilnya null, bukan Infinity atau NaN.
+export function percentChange(from, to) {
+  if (!Number.isFinite(from) || !Number.isFinite(to) || from === 0) return null;
+  const percent = ((to - from) / from) * 100;
+  return Math.round(percent * 10) / 10;
+}
+
+// Membaca satu bulan "YYYY-MM" dari query; label dipakai di pesan kesalahan.
+function readMonth(value, label) {
+  const month = String(value ?? '');
+  if (!MONTH_PATTERN.test(month)) {
+    throw new ValidationError(`${label} wajib diisi dengan format YYYY-MM, contoh 2023-05.`);
+  }
+  return month;
+}
+
 // Membuat "layanan" harga dari isi data/harga.json.
 export function createHargaService(data) {
   const rows = data.baris.map(([komoditas, provinsi, pasar, bulan, harga]) => ({
@@ -99,5 +121,70 @@ export function createHargaService(data) {
     };
   }
 
-  return { getOptions, getPrices };
+  // Perubahan harga antara dua bulan (REQ-002). Hanya pasar yang punya data di kedua bulan yang dihitung.
+  function getChange(query) {
+    const commodityCode = String(query.komoditas ?? 'beras-medium');
+    // Object.hasOwn menolak nama bawaan JavaScript seperti "constructor", yang juga ada di objek biasa.
+    if (!Object.hasOwn(COMMODITIES, commodityCode)) {
+      throw new ValidationError(`Komoditas "${commodityCode}" tidak dikenal. Pilihan: ${Object.keys(COMMODITIES).join(', ')}.`);
+    }
+    const commodity = COMMODITIES[commodityCode];
+
+    const province = String(query.provinsi ?? '').toUpperCase();
+    if (!provinces.includes(province)) {
+      throw new ValidationError(province ? `Provinsi "${query.provinsi}" tidak dikenal.` : 'Parameter provinsi wajib diisi.');
+    }
+
+    const from = readMonth(query.dari, 'Bulan awal');
+    const to = readMonth(query.sampai, 'Bulan akhir');
+    if (from > to) throw new ValidationError('Bulan awal tidak boleh setelah bulan akhir.');
+
+    // Harga tiap pasar di bulan awal dan bulan akhir: nama pasar -> harga.
+    // Map dipakai supaya nama pasar apa pun aman dijadikan kunci.
+    const fromPrices = new Map();
+    const toPrices = new Map();
+    for (const row of rows) {
+      if (row.komoditas !== commodityCode || row.provinsi !== province) continue;
+      if (row.bulan === from) fromPrices.set(row.pasar, row.harga);
+      if (row.bulan === to) toPrices.set(row.pasar, row.harga);
+    }
+
+    // Pasar yang sama = punya data di kedua bulan. Pasar yang hanya ada di satu bulan tidak ikut.
+    const sharedMarkets = [...fromPrices.keys()].filter((market) => toPrices.has(market));
+    const base = {
+      komoditas: { kode: commodityCode, nama: commodity.nama, satuan: commodity.satuan },
+      provinsi: province,
+      dari: from,
+      sampai: to,
+      pasarSama: sharedMarkets.length,
+    };
+    if (sharedMarkets.length === 0) {
+      return {
+        ...base,
+        awal: null,
+        akhir: null,
+        selisih: null,
+        persen: null,
+        tidakDapatDihitung: 'Perubahan tidak dapat dihitung: tidak ada pasar yang punya data di kedua bulan ini.',
+      };
+    }
+
+    // Persen dihitung dari rata-rata yang belum dibulatkan, supaya 10.000 ke 12.000 tepat 20.
+    const fromAverage = averagePrice(sharedMarkets.map((market) => fromPrices.get(market)));
+    const toAverage = averagePrice(sharedMarkets.map((market) => toPrices.get(market)));
+    const persen = percentChange(fromAverage, toAverage);
+    const awal = Math.round(fromAverage);
+    const akhir = Math.round(toAverage);
+
+    return {
+      ...base,
+      awal,
+      akhir,
+      selisih: akhir - awal,
+      persen,
+      tidakDapatDihitung: persen === null ? 'Perubahan tidak dapat dihitung: harga awal nol atau tidak tersedia.' : null,
+    };
+  }
+
+  return { getOptions, getPrices, getChange };
 }

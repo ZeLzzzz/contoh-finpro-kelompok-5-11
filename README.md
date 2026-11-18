@@ -2,7 +2,7 @@
 
 Dasbor harga beras, gula, dan minyak per provinsi dari data WFP/HDX. Ini **proyek contoh untuk mentoring Web Development**: dibuat hanya dengan teknologi silabus (HTML, Tailwind CDN, JavaScript/DOM, fetch, Express, GitHub, Vercel) dan ditulis agar mudah dibaca pemula.
 
-Spesifikasi lengkap ada di [`docs/`](docs/). Status saat ini: REQ-001 (tren harga) selesai; REQ-002 sampai REQ-005 belum dikerjakan.
+Spesifikasi lengkap ada di [`docs/`](docs/). Status saat ini: REQ-001 (tren harga) dan REQ-002 (perubahan dua bulan) selesai; REQ-003 sampai REQ-005 belum.
 
 ## Menjalankan
 
@@ -18,6 +18,7 @@ npm test         # menjalankan semua tes
 
 - Pilih komoditas, provinsi, dan periode; lihat grafik tren harga bulanan, jumlah pasar, flag cakupan, bulan terakhir data, metode, dan atribusi.
 - Pilihan filter ikut tersimpan di alamat halaman (`?provinsi=BALI&periode=2023-01:2024-05`).
+- Kartu "Perubahan harga" di kanan: pilih bulan awal dan akhir, lihat harga awal, harga akhir, selisih, dan persen perubahan dari pasar yang sama di kedua bulan.
 - Status memuat, error (dengan tombol "Coba lagi"), dan data kosong.
 
 ## Struktur folder
@@ -45,6 +46,9 @@ Isi pilihan filter: komoditas, provinsi, bulan yang tersedia.
 - `periode`: `YYYY-MM:YYYY-MM`, bawaan seluruh data.
 
 Membalas satu titik per bulan (`bulan`, `harga`, `pasar`, `cakupan`), titik `terakhir`, metode, dan atribusi. Input tidak valid dibalas `400` dengan `{ "pesan": "..." }`. Periode tanpa data dibalas `200` dengan `titik: []`.
+
+### `GET /api/perubahan?komoditas=beras-medium&provinsi=JAWA TIMUR&dari=2023-05&sampai=2024-05`
+Perubahan harga antara dua bulan, dihitung hanya dari pasar yang punya data di kedua bulan (`pasarSama`). Membalas `awal`, `akhir`, `selisih`, `persen` (satu desimal), atau `persen: null` dengan `tidakDapatDihitung` berisi alasannya (tidak ada pasar yang sama, atau harga acuan nol). Bulan awal setelah bulan akhir, atau input tidak valid, dibalas `400`.
 
 ## Data
 
