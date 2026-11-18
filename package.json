@@ -1,0 +1,19 @@
+{
+  "name": "contoh-finpro-kelompok-5-11",
+  "version": "0.1.0",
+  "description": "Dasbor harga pangan daerah dari data WFP/HDX. Proyek contoh untuk mentoring Web Development.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test",
+    "build-data": "node scripts/build-data.mjs"
+  },
+  "dependencies": {
+    "express": "^5.3.0"
+  }
+}

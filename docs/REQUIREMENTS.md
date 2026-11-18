@@ -4,7 +4,7 @@
 
 | ID | Hasil yang terlihat pengguna | Status | Bergantung pada |
 |---|---|---|---|
-| REQ-001 | Konsumen melihat tren harga beras medium per provinsi dan periode | ready | — |
+| REQ-001 | Konsumen melihat tren harga beras medium per provinsi dan periode | done | — |
 | REQ-002 | Pengguna melihat perubahan harga antara dua bulan dengan pasar yang sama | ready | REQ-001 |
 | REQ-003 | Petugas membandingkan beras, gula, dan minyak di satu provinsi | ready | REQ-001 |
 | REQ-004 | Petugas mengelola daftar pantauan (tambah, lihat, ubah, hapus) | ready | REQ-001 |
@@ -14,19 +14,19 @@
 
 ## REQ-001 — Tren harga beras medium per provinsi
 
-**Status:** ready
+**Status:** done
 **Tujuan:** Konsumen memilih komoditas, provinsi, dan periode, lalu membaca tren harga bulanan beserta cakupan pasarnya, sehingga tidak salah mengira angka ini sebagai harga toko hari ini.
 **Bergantung pada:** — (REQ ini juga membangun kerangka proyek, skrip agregasi data, dan API pertama.)
 **Keputusan terkait:** D-002, D-003, D-006, D-007, G-002, G-003, G-004
 
 ### Acceptance criteria
-- [ ] **AC-1 (alur utama):** Ketika konsumen memilih komoditas, provinsi, dan periode, maka halaman menampilkan grafik garis rata-rata harga bulanan (IDR/KG), jumlah pasar (n) per bulan terakhir, flag cakupan, bulan terakhir data, metode agregasi, dan atribusi WFP/HDX.
-- [ ] **AC-2 (agregasi):** Rata-rata bulanan adalah rata-rata tak berbobot dari pasar yang punya data, hanya dari baris Retail, IDR, KG, priceflag=aggregate, dan baris National Average tidak ikut dihitung.
-- [ ] **AC-3 (input tidak valid):** Ketika `GET /api/harga` menerima komoditas, provinsi, atau periode yang tidak dikenal, maka server membalas 400 dengan pesan JSON, dan halaman menampilkan pesan itu tanpa menghapus tampilan sebelumnya.
-- [ ] **AC-4 (data kosong):** Ketika kombinasi filter tidak punya data, maka halaman menampilkan "Tidak ada data untuk pilihan ini" dan bukan nol.
-- [ ] **AC-5 (loading dan error):** Saat menunggu, halaman menampilkan status memuat; bila request gagal atau server membalas 5xx, tampil pesan error dan tombol "Coba lagi" yang mengulang request. Mengganti filter memicu satu request, bukan satu per ketikan.
-- [ ] **AC-6 (ukuran respons):** Respons `/api/harga` hanya berisi satu titik per bulan (bukan baris per pasar), dan tidak ada CSV mentah di repo yang dikirim ke browser.
-- [ ] **AC-7 (responsif):** Di layar 360 px tidak ada scroll horizontal, dan semua kontrol dapat dipakai.
+- [x] **AC-1 (alur utama):** Ketika konsumen memilih komoditas, provinsi, dan periode, maka halaman menampilkan grafik garis rata-rata harga bulanan (IDR/KG), jumlah pasar (n) per bulan terakhir, flag cakupan, bulan terakhir data, metode agregasi, dan atribusi WFP/HDX.
+- [x] **AC-2 (agregasi):** Rata-rata bulanan adalah rata-rata tak berbobot dari pasar yang punya data, hanya dari baris Retail, IDR, KG, priceflag=aggregate, dan baris National Average tidak ikut dihitung.
+- [x] **AC-3 (input tidak valid):** Ketika `GET /api/harga` menerima komoditas, provinsi, atau periode yang tidak dikenal, maka server membalas 400 dengan pesan JSON, dan halaman menampilkan pesan itu tanpa menghapus tampilan sebelumnya.
+- [x] **AC-4 (data kosong):** Ketika kombinasi filter tidak punya data, maka halaman menampilkan "Tidak ada data untuk pilihan ini" dan bukan nol.
+- [x] **AC-5 (loading dan error):** Saat menunggu, halaman menampilkan status memuat; bila request gagal atau server membalas 5xx, tampil pesan error dan tombol "Coba lagi" yang mengulang request. Mengganti filter memicu satu request, bukan satu per ketikan.
+- [x] **AC-6 (ukuran respons):** Respons `/api/harga` hanya berisi satu titik per bulan (bukan baris per pasar), dan tidak ada CSV mentah di repo yang dikirim ke browser.
+- [x] **AC-7 (responsif):** Di layar 360 px tidak ada scroll horizontal, dan semua kontrol dapat dipakai.
 
 ### Di luar REQ ini
 - Perbandingan dua bulan (REQ-002), tiga komoditas (REQ-003), daftar pantauan (REQ-004), deploy (REQ-005).
